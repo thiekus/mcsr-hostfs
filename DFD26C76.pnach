@@ -1,0 +1,77 @@
+// Midnight Club: Street Racing (NTSC/US) HostFS unpacked patch
+// Patched by Thiekus 2026
+
+gametitle=Midnight Club - Street Racing (US)
+
+[HostFS Unpacked]
+description=Enable HostFS with unpacked data
+author=thiekus
+
+// Force use coreFileStandard on zipFile::InitInternal
+// addiu v1,v1,0x3340 => addiu v1,v1,0x56a8
+patch=3,EE,00281264,word,246356a8
+
+// NOP to avoid iopManager::sm_ModuleLocation set to 1
+// This enforce module to be load by host0: instead hardcoded cdrom0:
+patch=3,EE,0029ebf8,word,00000000
+
+// Disable /mcassets/shop path prefix on host0:
+patch=3,EE,0030c980,byte,00 // terminate with null at beginning
+
+// Replace aud/music/ path to music/ just like in original game CD at 0x0031e758
+// Because dev location of music is inside aud dir rather than root dir
+patch=3,EE,0031e758,byte,6D // m
+patch=3,EE,0031e759,byte,75 // u
+patch=3,EE,0031e75a,byte,73 // s
+patch=3,EE,0031e75b,byte,69 // i
+patch=3,EE,0031e75c,byte,63 // c
+patch=3,EE,0031e75d,byte,2F // /
+patch=3,EE,0031e75e,byte,00 // \0
+
+// Fix vag path from aud\audvag to aud/audvag
+patch=3,EE,003243f8,byte,61 // a
+patch=3,EE,003243f9,byte,75 // u
+patch=3,EE,003243fa,byte,64 // d
+patch=3,EE,003243fb,byte,2F // /
+patch=3,EE,003243fc,byte,61 // a
+patch=3,EE,003243fd,byte,75 // u
+patch=3,EE,003243fe,byte,64 // d
+patch=3,EE,003243ff,byte,76 // v
+patch=3,EE,00324400,byte,61 // a
+patch=3,EE,00324401,byte,67 // g
+patch=3,EE,00324402,byte,2F // /
+patch=3,EE,00324403,byte,00 // \0
+
+// Patch to avoid read *.zip files
+// bne v0,zero,LAB_00100574 => j 0x100574
+patch=3,EE,00100528,word,0804015d
+patch=3,EE,0010052c,word,00000000
+
+// Force load hardcoded IOP from host0 instead of cdrom0
+// Not required but maybe need to quick replace?
+patch=3,EE,003244a8,byte,68 // h
+patch=3,EE,003244a9,byte,6F // o
+patch=3,EE,003244aa,byte,73 // s
+patch=3,EE,003244ab,byte,74 // t
+patch=3,EE,003244ac,byte,30 // 0
+patch=3,EE,003244ad,byte,3A // :
+patch=3,EE,003244ae,byte,53 // S
+patch=3,EE,003244af,byte,59 // Y
+patch=3,EE,003244b0,byte,53 // S
+patch=3,EE,003244b1,byte,54 // T
+patch=3,EE,003244b2,byte,45 // E
+patch=3,EE,003244b3,byte,4D // M
+patch=3,EE,003244b4,byte,2F // /
+patch=3,EE,003244b5,byte,49 // I
+patch=3,EE,003244b6,byte,4F // O
+patch=3,EE,003244b7,byte,50 // P
+patch=3,EE,003244b8,byte,52 // R
+patch=3,EE,003244b9,byte,50 // P
+patch=3,EE,003244ba,byte,31 // 1
+patch=3,EE,003244bb,byte,36 // 6
+patch=3,EE,003244bc,byte,35 // 5
+patch=3,EE,003244bd,byte,2E // .
+patch=3,EE,003244be,byte,49 // I
+patch=3,EE,003244bf,byte,4D // M
+patch=3,EE,003244c0,byte,47 // G
+patch=3,EE,003244c1,byte,00 // \0
