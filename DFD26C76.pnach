@@ -11,6 +11,22 @@ author=thiekus
 // addiu v1,v1,0x3340 => addiu v1,v1,0x56a8
 patch=3,EE,00281264,word,246356a8
 
+// Put ":" to fit into "host0:" prefix instead of "cdrom0:"
+// lb v1, 0x0006 => lb v1, 0x0005
+patch=3,EE,002a6f1c,word,80830005
+
+// Swap between / => \ to \ => /
+// li a1, 0x2f => li a1, 0x5f
+patch=3,EE,002a6f40,word,2405005c
+// li a0, 0x5f => li a0, 0x2f
+patch=3,EE,002a6f44,word,2404002f
+
+// NOP at appending ";1\0" suffix
+patch=3,EE,002a6f94,word,00000000
+patch=3,EE,002a6f98,word,00000000
+patch=3,EE,002a6f9c,word,00000000
+patch=3,EE,002a6fa0,word,00000000
+
 // NOP to avoid iopManager::sm_ModuleLocation set to 1
 // This enforce module to be load by host0: instead hardcoded cdrom0:
 patch=3,EE,0029ebf8,word,00000000
