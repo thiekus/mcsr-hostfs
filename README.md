@@ -1,6 +1,6 @@
 # Midnight Club: Street Racing HostFS Unpacked
 
-My attempt to recreate lost Project AGE for running MCSR with unpacked files as pnach patch. To use this:
+My attempt to recreate lost Project AGE for running Midnight Club: Street Racing (NTSC-US) with unpacked files as pnach patch. To use this:
 
 * Make sure in PCSX2 (v2.x) enable `Tools > Show Advanced Settings`.
 * Put `DFD26C76.pnach` patch into PCSX2 patches directory.
