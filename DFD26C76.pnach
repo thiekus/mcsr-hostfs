@@ -1,15 +1,35 @@
 // Midnight Club: Street Racing (NTSC/US) HostFS unpacked patch
 // Patched by Thiekus 2026
 
-gametitle=Midnight Club - Street Racing (US)
+gametitle=Midnight Club - Street Racing (NTSC/US)
 
 [HostFS Unpacked]
 description=Enable HostFS with unpacked data
-author=thiekus
+author=Thiekus
 
 // Force use coreFileStandard on zipFile::InitInternal
 // addiu v1,v1,0x3340 => addiu v1,v1,0x56a8
 patch=3,EE,00281264,word,246356a8
+
+// NOP to avoid iopManager::sm_ModuleLocation set to 1
+// This enforce module to be load by host0: instead hardcoded cdrom0:
+patch=3,EE,0029ebf8,word,00000000
+
+// Disable /mcassets/shop path prefix on host0:
+patch=3,EE,0030c980,byte,00 // terminate with null at beginning
+
+// Replace aud/music/ path to music/ just like in original game CD
+// Because dev location of music is inside aud dir rather than root dir
+patch=3,EE,0031e758,byte,6D // m
+patch=3,EE,0031e759,byte,75 // u
+patch=3,EE,0031e75a,byte,73 // s
+patch=3,EE,0031e75b,byte,69 // i
+patch=3,EE,0031e75c,byte,63 // c
+patch=3,EE,0031e75d,byte,2F // /
+patch=3,EE,0031e75e,byte,00 // \0
+
+// While these patches above is required to HostFS works
+// These bottom patches is more likely for more consistency with HostFS
 
 // Put ":" to fit into "host0:" prefix instead of "cdrom0:"
 // lb v1, 0x0006 => lb v1, 0x0005
@@ -26,37 +46,6 @@ patch=3,EE,002a6f94,word,00000000
 patch=3,EE,002a6f98,word,00000000
 patch=3,EE,002a6f9c,word,00000000
 patch=3,EE,002a6fa0,word,00000000
-
-// NOP to avoid iopManager::sm_ModuleLocation set to 1
-// This enforce module to be load by host0: instead hardcoded cdrom0:
-patch=3,EE,0029ebf8,word,00000000
-
-// Disable /mcassets/shop path prefix on host0:
-patch=3,EE,0030c980,byte,00 // terminate with null at beginning
-
-// Replace aud/music/ path to music/ just like in original game CD at 0x0031e758
-// Because dev location of music is inside aud dir rather than root dir
-patch=3,EE,0031e758,byte,6D // m
-patch=3,EE,0031e759,byte,75 // u
-patch=3,EE,0031e75a,byte,73 // s
-patch=3,EE,0031e75b,byte,69 // i
-patch=3,EE,0031e75c,byte,63 // c
-patch=3,EE,0031e75d,byte,2F // /
-patch=3,EE,0031e75e,byte,00 // \0
-
-// Fix vag path from aud\audvag to aud/audvag
-patch=3,EE,003243f8,byte,61 // a
-patch=3,EE,003243f9,byte,75 // u
-patch=3,EE,003243fa,byte,64 // d
-patch=3,EE,003243fb,byte,2F // /
-patch=3,EE,003243fc,byte,61 // a
-patch=3,EE,003243fd,byte,75 // u
-patch=3,EE,003243fe,byte,64 // d
-patch=3,EE,003243ff,byte,76 // v
-patch=3,EE,00324400,byte,61 // a
-patch=3,EE,00324401,byte,67 // g
-patch=3,EE,00324402,byte,2F // /
-patch=3,EE,00324403,byte,00 // \0
 
 // Patch to avoid read *.zip files
 // bne v0,zero,LAB_00100574 => j 0x100574
